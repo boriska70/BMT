@@ -1,5 +1,10 @@
-- monitor
-    - name
-      - url
-      - body
-      - interval
+- kind: es
+  name: mon1
+  url: /index/_search
+  body: '{}'
+  interval: 60
+- kind: es
+  name: mon2
+  url: /index/_mapping
+  body: '{}'
+  interval: 30

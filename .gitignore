@@ -8,6 +8,7 @@ _obj
 _test
 
 .idea
+# temporary; later vendor should be included
 vendor
 
 # Architecture specific extensions/prefixes

@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	elastic "gopkg.in/olivere/elastic.v5"
 	"flag"
 	log "github.com/Sirupsen/logrus"
-	"github.com/boriska70/BMT/monitors"
 	"github.com/boriska70/BMT/web"
+	"github.com/boriska70/BMT/util"
+	"github.com/boriska70/BMT/monitoring"
 )
 
 func main() {
@@ -16,8 +16,7 @@ func main() {
 	flag.String("oes", "http://localhost:9200", "Elasticsearch URL to save data")
 
 	fmt.Printf("Hello\n")
-	qBytes, _ := ioutil.ReadFile("./queries.yml")
-	fmt.Printf("File: %s", string(qBytes[:len(qBytes)]))
+	monitors := util.ReadConfigYaml()
 
 	client, err := elastic.NewClient()
 	if err != nil {
@@ -28,8 +27,10 @@ func main() {
 	log.Infof("Cluster state: %", state);
 	dataChannel := make(chan string, 100)
 
-	go monitors.FetchData(dataChannel)
-	go monitors.SendData(dataChannel)
+	go monitoring.SendData(dataChannel)
+	for _, monitor := range monitors {
+		go monitoring.FetchData(dataChannel, monitor)
+	}
 
 	//time.Sleep(15 * time.Second)
 

@@ -1,5 +1,5 @@
-hash: 99fd6591e434e2c11152a48e913285cfabf0f10c080f23471a0b407f786f906e
-updated: 2017-02-26T00:12:50.4512453+02:00
+hash: 0e612fdbba4da597c3765ee119607c7d3a07b624c602936420b69cedddb43f1e
+updated: 2017-03-03T00:05:07.6864243+02:00
 imports:
 - name: github.com/Sirupsen/logrus
   version: c078b1e43f58d563c74cebe63c85789e76ddb627
@@ -17,4 +17,6 @@ imports:
   subpackages:
   - backoff
   - uritemplates
+- name: gopkg.in/yaml.v2
+  version: a3f3340b5840cee44f372bddb5880fcbc419b46a
 testImports: []
