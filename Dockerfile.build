@@ -30,4 +30,5 @@ RUN chmod a+x script/*.sh
 RUN pwd
 RUN ls -la
 RUN ls -la script
+RUN chmod a+x script/*.sh
 CMD ["script/go_build.sh"]
