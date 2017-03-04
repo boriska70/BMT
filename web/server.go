@@ -9,7 +9,7 @@ import (
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello from BMT")
+	fmt.Fprintf(w, "Hello from bmt")
 }
 
 func echoHandler(w http.ResponseWriter, r *http.Request) {

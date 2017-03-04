@@ -5,9 +5,9 @@ import (
 	elastic "gopkg.in/olivere/elastic.v5"
 	"flag"
 	log "github.com/Sirupsen/logrus"
-	"github.com/boriska70/BMT/web"
-	"github.com/boriska70/BMT/util"
-	"github.com/boriska70/BMT/monitoring"
+	"github.com/boriska70/bmt/web"
+	"github.com/boriska70/bmt/util"
+	"github.com/boriska70/bmt/monitoring"
 )
 
 func main() {

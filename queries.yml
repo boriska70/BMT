@@ -2,9 +2,9 @@
   name: mon1
   url: /index/_search
   body: '{}'
-  interval: 60
+  interval: 15
 - kind: es
   name: mon2
   url: /index/_mapping
   body: '{}'
-  interval: 30
+  interval: 20

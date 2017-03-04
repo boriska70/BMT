@@ -1,0 +1,34 @@
+machine:
+  pre:
+    - echo 'DOCKER_OPTS="-s btrfs -e lxc -D --userland-proxy=false"' | sudo tee -a /etc/default/docker
+    - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.1-circleci'
+    - sudo chmod 0755 /usr/bin/docker
+  services:
+    - docker
+dependencies:
+  override:
+    - docker build -t boriska70/bmt-builder -f Dockerfile.build .
+    - docker run -t --name bmt-builder -v /home/ubuntu/bmt:/go/src/github.com/boriska70/bmt -w /go/src/github.com/boriska70/bmt boriska70/bmt-builder
+    - mkdir -p .dist
+    - docker cp  bmt-builder:/go/src/github.com/boriska70/bmt/.dist/bmt .dist/
+    - docker build -t boriska70/bmt .
+    - docker tag boriska70/bmt boriska70/bmt:$CIRCLE_BUILD_NUM-$CIRCLE_BRANCH
+    - docker tag boriska70/bmt boriska70/bmt:$CIRCLE_BRANCH
+test:
+  override:
+    # run tugbot tests and generate junit.xml reports
+  post:
+    # copy test results
+
+
+deployment:
+  continuous:
+    branch: [master, develop, /feature_.*/]
+    commands:
+      # deply image to DockerHub
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push boriska70/bmt
+general:
+  artifacts:
+    - .dist
+    - .cover

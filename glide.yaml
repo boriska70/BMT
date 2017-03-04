@@ -1,4 +1,4 @@
-package: github.com/boriska70/BMT
+package: github.com/boriska70/bmt
 import:
 - package: github.com/Sirupsen/logrus
   version: v0.11.2
