@@ -29,4 +29,5 @@ COPY . $BMT_DIR
 RUN chmod a+x script/*.sh
 RUN pwd
 RUN ls -la
+RUN ls -la script
 CMD ["script/go_build.sh"]
