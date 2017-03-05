@@ -20,7 +20,7 @@ type Monitor struct {
 func ReadConfigYaml() []Monitor{
 
 	config := [] Monitor{}
-	cfgFile, err := ioutil.ReadFile(configFileName)
+	cfgFile, err := ioutil.ReadFile("../"+configFileName)
 	if err != nil {
 		logrus.Fatal("Failed to read " + configFileName)
 		os.Exit(1)

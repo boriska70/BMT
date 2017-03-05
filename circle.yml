@@ -17,9 +17,12 @@ dependencies:
 test:
   override:
     # run tugbot tests and generate junit.xml reports
+    - docker run -it --name bmt-unitests boriska70/bmt-builder script/coverage.sh
   post:
     # copy test results
-
+    - docker cp bmt-unitests:/go/src/github.com/boriska70/bmt/.cover/ .
+    # deploy test coverage results to codecov
+    - bash <(curl -s https://codecov.io/bash) -f ./.cover/cover.out
 
 deployment:
   continuous:
