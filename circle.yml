@@ -8,7 +8,7 @@ machine:
 dependencies:
   override:
     - docker build -t boriska70/bmt-builder -f Dockerfile.build .
-    - docker run -t --name bmt-builder -v /home/ubuntu/bmt:/go/src/github.com/boriska70/bmt -w /go/src/github.com/boriska70/bmt boriska70/bmt-builder
+    - docker run -t --name bmt-builder -w /go/src/github.com/boriska70/bmt boriska70/bmt-builder
     - mkdir -p .dist
     - docker cp  bmt-builder:/go/src/github.com/boriska70/bmt/.dist/bmt .dist/
     - docker build -t boriska70/bmt .
