@@ -29,15 +29,14 @@ services:
       - "5601:5601"
     depends_on:
       - elastic
-  dockemon:
+  bmt:
     image: boriska70/bmt
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /usr/bin
     links:
       - elastic
     depends_on:
       - elastic
-    command: "/usr/bin/dockemon -esurl=http://elastic:9200 -dci=300"
+    command: "/usr/bin/bmt"
 volumes:
   esdata:
     driver: local
