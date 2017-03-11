@@ -1,30 +1,37 @@
 package main
 
 import (
-	"fmt"
-	elastic "gopkg.in/olivere/elastic.v5"
+	//elastic "gopkg.in/olivere/elastic.v5"
 	"flag"
 	log "github.com/Sirupsen/logrus"
 	"github.com/boriska70/bmt/web"
 	"github.com/boriska70/bmt/util"
 	"github.com/boriska70/bmt/monitoring"
+	client "github.com/boriska70/bmt/elasticsearch"
+	"io/ioutil"
 )
 
 func main() {
 
-	flag.String("ies", "http://localhost:9200", "Elasticsearch URL to query for data")
-	flag.String("oes", "http://localhost:9200", "Elasticsearch URL to save data")
+	ies := flag.String("ies", "http://localhost:9200", "Elasticsearch URL to query for data")
+	oes := flag.String("oes", "http://localhost:9200", "Elasticsearch URL to save data")
+	cfg := flag.String("queries","queries.yml","Path to queries.yml")
 
-	fmt.Printf("Hello\n")
-	monitors := util.ReadConfigYaml()
-
-	client, err := elastic.NewClient()
-	if err != nil {
-		// Handle error
+	log.Info("Hello\n")
+	cfgFile,cfgErr := ioutil.ReadFile(*cfg)
+	if cfgErr!=nil {
+		log.Fatalf("Cannot find queries.yml in %v", cfg)
 	}
+	monitors := util.ReadConfigYaml(cfgFile)
 
-	state := client.ClusterState();
-	log.Infof("Cluster state: %", state);
+	client.ClientIn= client.CreateClient(*ies)
+	client.ClientOut= client.CreateClient(*oes)
+
+	stateIn := client.ClientIn.ClusterState();
+	stateOut := client.ClientOut.ClusterState();
+	log.Infof("Cluster in state: %", stateIn);
+	log.Infof("Cluster out state: %", stateOut);
+
 	dataChannel := make(chan string, 100)
 
 	go monitoring.SendData(dataChannel)

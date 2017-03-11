@@ -1,10 +1,12 @@
 - kind: es
   name: mon1
-  url: /index/_search
-  body: '{}'
+  index: tweets
+  type:
+  body: "{}"
   interval: 15
 - kind: es
-  name: mon2
-  url: /index/_mapping
-  body: '{}'
+  name: mon1
+  index: tweets
+  type:
+  body: "{{'size':0','aggs':{'authors':{'terms':{'field':'author.keyword'}}}}}"
   interval: 20
