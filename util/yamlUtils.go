@@ -14,6 +14,7 @@ type Monitor struct {
 	Name     string
 	Index      string
 	Type      string
+	Method    string
 	Body     string
 	Interval int
 }
