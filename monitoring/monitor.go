@@ -20,12 +20,12 @@ var inputLength = 3
 func FetchData(ch chan string, monitor util.Monitor) {
 	fmt.Printf("My monitor is %s\n", monitor)
 	for true {
-
 		if strings.EqualFold(monitor.Kind, "http") {
 			url := config.IES+"/"+monitor.Index
 			if len(monitor.Type)>0 {
-				url += url+"/"+monitor.Type
+				url += "/"+monitor.Type
 			}
+			url += "/_search"
 			res := fetchDataOverHttp(monitor, url)
 			ch <- res
 
@@ -54,8 +54,8 @@ func fetchDataOverHttp(monitor util.Monitor, url string) string {
 	}
 	defer resp.Body.Close()
 
-	logrus.Info("Status for fetching data for monitor %s is %d", monitor.Name, resp.StatusCode)
-	logrus.Info("Response headers are %v", resp.Header)
+	logrus.Infof("Status for fetching data for monitor %s is %d", monitor.Name, resp.StatusCode)
+	logrus.Infof("Response headers are %v", resp.Header)
 	body,_ := ioutil.ReadAll(resp.Body)
 
 	return string(body)

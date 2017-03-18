@@ -19,8 +19,8 @@ func main() {
 	config.CfgFile = *flag.String("queries","queries.yml","Path to queries.yml")
 
 
-
-	log.Info("Hello\n")
+	log.Info("Hello")
+	log.Infof("Parameters received: input ES - %s, output ES - %s, configuration file path - %s", config.IES, config.OES, config.CfgFile)
 	cfgFile,cfgErr := ioutil.ReadFile(config.CfgFile)
 	if cfgErr!=nil {
 		log.Fatalf("Cannot find queries.yml in %v", config.CfgFile)

@@ -13,7 +13,7 @@ func CreateClient(url string) (*elastic.Client) {
 	log.Infof("Creating Elasticsearch client for %v", url)
 	client, err := elastic.NewClient(elastic.SetURL(url))
 	if err!=nil {
-		log.Fatalf("Failed to create client for %s", url)
+		log.Fatalf("Failed to create Elasticsearch client for %s", url)
 	}
 	return client
 }

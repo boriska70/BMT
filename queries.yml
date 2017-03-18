@@ -3,12 +3,12 @@
   index: tweets
   type:
   method: POST
-  body: "{}"
+  body: '{}'
   interval: 15
 - kind: http
   name: mon1
   index: tweets
   type:
   method: POST
-  body: "{{'size':0','aggs':{'authors':{'terms':{'field':'author.keyword'}}}}}"
+  body: '{"size":"0","aggs":{"authors":{"terms":{"field":"author.keyword"}}}}'
   interval: 20

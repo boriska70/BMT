@@ -36,7 +36,7 @@ services:
       - elastic
     depends_on:
       - elastic
-    command: "/usr/bin/bmt"
+    command: "/usr/bin/bmt -ies=http://elastic:9200 -oes=http://elastic:9200"
 volumes:
   esdata:
     driver: local
