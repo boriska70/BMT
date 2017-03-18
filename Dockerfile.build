@@ -6,6 +6,9 @@ WORKDIR $BMT_DIR
 # install curl apk
 RUN apk add --update curl
 
+RUN apk add --update bash
+RUN apk add --update vim
+
 # install Git apk
 RUN apk --update add git \
     && rm -rf /var/lib/apt/lists/* \

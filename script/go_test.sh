@@ -10,14 +10,13 @@ declare -a folders=( $(go list ./... | grep -v vendor) )
 
 for folder in "${folders[@]}"; do
   echo Testing $folder
-  IFS='/' read -ra names <<< "$folder"
-  namesLen=${#names[@]}
-  let "namesLen--"
-  pkg=$(echo ${names[$namesLen]})
-
+#  IFS='/' read -ra names <<< "$folder"
+#  namesLen=${#names[@]}
+#  let "namesLen--"
+#  pkg=$(echo ${names[$namesLen]})
   f=$(echo ./.cover/$(echo $folder | tr / -).cover)
   tf=$(echo ./.cover/$(echo $folder | tr / -)_tests.xml)
-  go test -v -cover -covermode="count" -coverprofile="$f" $pkg | go-junit-report > "$tf"
+  go test -cover -covermode="count" -coverprofile="$f" $folder | go-junit-report > "$tf"
   #check for failures in order to set correct exit code after all
   grep -F "testsuite " "$tf"
   if [ $? -eq 0 ]; then
