@@ -38,7 +38,11 @@ func main() {
 
 	go monitoring.SendData(dataChannel)
 	for _, monitor := range monitors {
-		go monitoring.FetchData(dataChannel, monitor)
+		if(monitor.Disable){
+			log.Infof("Monitor %s is disabled in configuration, will not run", monitor.Disable)
+		} else {
+			go monitoring.FetchData(dataChannel, monitor)
+		}
 	}
 
 	//time.Sleep(15 * time.Second)

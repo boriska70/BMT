@@ -17,6 +17,7 @@ type Monitor struct {
 	Method    string
 	Body     string
 	Interval int
+	Disable bool
 }
 
 func ReadConfigYaml(cfgBytes []byte) []Monitor{

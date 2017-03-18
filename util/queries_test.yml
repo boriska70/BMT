@@ -5,3 +5,11 @@
   method: POST
   body: "{{'size':0','aggs':{'authors':{'terms':{'field':'author.keyword'}}}}}"
   interval: 20
+- kind: http
+  name: mon2
+  index: tweets
+  type:
+  method: GET
+  body: "{}"
+  interval: 20
+  disable: true

@@ -17,9 +17,12 @@ func TestReadConfigYaml(t *testing.T)  {
 	}
 	config := ReadConfigYaml(cfgBytes)
 	assert.NotNil(t, config)
-	assert.Equal(t, 1, len(config))
+	assert.Equal(t, 2, len(config))
+	assert.False(t, config[0].Disable)
+	assert.True(t, config[1].Disable)
 
-	assert.Equal(t, config, createMonitors())
+	assert.Equal(t, config[0], createMonitors()[0])
+
 
 	fmt.Printf("Monitor: %b", config[0].Index)
 
@@ -34,6 +37,7 @@ func createMonitors() []Monitor {
 	m1.Method="POST"
 	m1.Body="{{'size':0','aggs':{'authors':{'terms':{'field':'author.keyword'}}}}}"
 	m1.Interval=20
+	m1.Disable=false
 	m = append(m, m1)
 	return m
 }
