@@ -14,10 +14,14 @@ import (
 func main() {
 
 
-	config.IES = *flag.String("ies", "http://localhost:9200", "Elasticsearch URL to query for data")
-	config.OES = *flag.String("oes", "http://localhost:9200", "Elasticsearch URL to save data")
-	config.CfgFile = *flag.String("queries","queries.yml","Path to queries.yml")
+	v1 := flag.String("ies", "http://localhost:9200", "Elasticsearch URL to query for data")
+	v2 := flag.String("oes", "http://localhost:9200", "Elasticsearch URL to save data")
+	v3 := flag.String("queries","queries.yml","Path to queries.yml")
+	flag.Parse()
 
+	config.IES=*v1
+	config.OES=*v2
+	config.CfgFile=*v3
 
 	log.Info("Hello")
 	log.Infof("Parameters received: input ES - %s, output ES - %s, configuration file path - %s", config.IES, config.OES, config.CfgFile)
