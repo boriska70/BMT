@@ -33,10 +33,10 @@ services:
     image: boriska70/bmt
     working_dir: /usr/bin
     links:
-      - elastic
+      - elastic:elasticsearch
     depends_on:
       - elastic
-    command: "/usr/bin/bmt -ies=http://elastic:9200 -oes=http://elastic:9200"
+    command: "/usr/bin/bmt -ies=http://elasticsearch:9200 -oes=http://elasticsearch:9200"
 volumes:
   esdata:
     driver: local

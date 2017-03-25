@@ -38,7 +38,7 @@ func main() {
 	//log.Infof("Cluster in state: %", stateIn);
 	log.Infof("Cluster out state: %", stateOut);
 
-	dataChannel := make(chan string, 100)
+	dataChannel := make(chan monitoring.BmtMon, 100)
 
 	go monitoring.SendData(dataChannel)
 	for _, monitor := range monitors {

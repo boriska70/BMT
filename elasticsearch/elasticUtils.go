@@ -10,12 +10,16 @@ var ClientOut *elastic.Client
 
 func CreateClient(url string) (*elastic.Client) {
 	//https://github.com/olivere/elastic/wiki/Configuration
-	log.Infof("Creating Elasticsearch client for %v", url)
-	client, err := elastic.NewClient(elastic.SetURL(url))
-	if err!=nil {
-		log.Fatalf("Failed to create Elasticsearch client for %s", url)
+	if true {
+		log.Infof("Creating Elasticsearch client for %v", url)
+		client, err := elastic.NewClient(elastic.SetURL(url))
+		if err != nil {
+			log.Infof("Failed to create Elasticsearch client for %s", url)
+		} else {
+			return client
+		}
 	}
-	return client
+	return nil
 }
 
 func  RunSearch(client *elastic.Client, index string, datatype string, body string) *elastic.SearchResult {
