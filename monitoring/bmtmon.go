@@ -1,23 +1,15 @@
 package monitoring
 
 import (
-	"time"
-	"encoding/json"
+	//"time"
 )
 
 type BmtMon struct {
-	bmt_ts time.Time
 	bmt_name string
-	bmt_data string
+	Bmt_data interface{} `json:"data"`
 }
 
-func (m BmtMon) MarshalJSON() ([]byte, error) {
-	return json.Marshal(struct {
-		ts time.Time
-		data string
-	}{
-		m.bmt_ts,
-		m.bmt_data,
-	})
-}
-
+/*type BmtMonEnriched struct {
+	Bmt_ts  time.Time `json:"ts"`
+	Bmt_mon BmtMon `json:"result"`
+}*/

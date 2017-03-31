@@ -7,18 +7,15 @@ import (
 	"github.com/boriska70/bmt/config"
 	"github.com/boriska70/bmt/util"
 	clients "github.com/boriska70/bmt/clients"
-	//es "github.com/boriska70/bmt/elasticsearch"
+	es "github.com/boriska70/bmt/elasticsearch"
 	log "github.com/Sirupsen/logrus"
 	"net/http"
 	"strings"
 	"bytes"
 	"io/ioutil"
-	//"context"
 	json "encoding/json"
+	"context"
 )
-
-var inputSource = [] rune("abcdefghijklmnopqrstuvwxyz")
-var inputLength = 3
 
 func FetchData(ch chan BmtMon, monitor util.Monitor) {
 	fmt.Printf("My monitor is %s\n", monitor)
@@ -41,24 +38,24 @@ func FetchData(ch chan BmtMon, monitor util.Monitor) {
 				hitsMap, _ := hits.(map[string]interface{})
 				if len(hitsMap["hits"].([]interface{})) > 0 {
 					var hitsBytes []byte
+					hitsMap["ts"]=time.Now().UTC().Round(time.Second)
 					hitsBytes,_ = json.Marshal(hitsMap)
-					log.Println("Sending hits: " + string(hitsBytes))
+					//log.Println("Sending hits: " + string(hitsBytes))
 					var data BmtMon
-					data.bmt_ts = time.Now().UTC()
 					data.bmt_name = monitor.Name+"_hits"
-					data.bmt_data = string(hitsBytes)
+					data.Bmt_data = string(hitsBytes)
 					ch <- data
 				}
 				aggs := parsed["aggregations"]
 				aggsMap,_ := aggs.(map[string]interface{})
 				if len(aggsMap) > 0 {
 					var aggsBytes []byte
+					aggsMap["ts"]=time.Now().UTC().Round(time.Second)
 					aggsBytes,_ = json.Marshal(aggsMap)
-					log.Println("Sending aggregations: " + string(aggsBytes))
+					//log.Println("Sending aggregations: " + string(aggsBytes))
 					var data BmtMon
-					data.bmt_ts = time.Now().UTC()
 					data.bmt_name = monitor.Name+"_aggregations"
-					data.bmt_data = string(aggsBytes)
+					data.Bmt_data = string(aggsBytes)
 					ch <- data
 				}
 
@@ -96,11 +93,11 @@ func fetchDataOverHttp(monitor util.Monitor, url string) string {
 func SendData(ch chan BmtMon) {
 	for true {
 		var data = <-ch
-		dataStr,_ := data.MarshalJSON()
-		fmt.Printf("Data received: %s\n", dataStr)
-		//_, err := es.ClientOut.Index().Index("bmt").Type(data.bmt_name).BodyString(data.bmt_data).Do(context.Background())
-		//if err != nil {
-		//	fmt.Println("Error: %s", err)
-		//}
+		//dataStr,_ := json.Marshal(data);
+		fmt.Printf("Data received: %v\n", data)
+		_, err := es.ClientOut.Index().Index("bmt").Type(data.bmt_name).BodyJson(data.Bmt_data).Do(context.Background())
+		if err != nil {
+			fmt.Println("Error: %s", err)
+		}
 	}
 }
