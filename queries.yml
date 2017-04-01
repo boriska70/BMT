@@ -4,11 +4,11 @@
   type:
   method: POST
   body: '{}'
-  interval: 15
+  interval: 20
 - kind: http
-  name: mon1
+  name: mon2
   index: tweets
   type:
   method: POST
   body: '{"size":"0","aggs":{"authors":{"terms":{"field":"author.keyword"}}}}'
-  interval: 10
+  interval: 30
