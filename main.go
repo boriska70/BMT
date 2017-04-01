@@ -35,22 +35,22 @@ func main() {
 
 	if client.ClientOut == nil {
 		os.Exit(-13)
-	}
-	stateOut := client.ClientOut.ClusterState();
-	log.Infof("Cluster out state: %", stateOut);
-	dataChannel := make(chan monitoring.BmtMon, 100)
+	} else {
+		stateOut := client.ClientOut.ClusterState();
+		log.Infof("Cluster out state: %", stateOut);
+		dataChannel := make(chan monitoring.BmtMon, 100)
 
-	go monitoring.SendData(dataChannel)
-	for _, monitor := range monitors {
-		if (monitor.Disable) {
-			log.Infof("Monitor %s is disabled in configuration, will not run", monitor.Disable)
-		} else {
-			go monitoring.FetchData(dataChannel, monitor)
+		go monitoring.SendData(dataChannel)
+		for _, monitor := range monitors {
+			if (monitor.Disable) {
+				log.Infof("Monitor %s is disabled in configuration, will not run", monitor.Disable)
+			} else {
+				go monitoring.FetchData(dataChannel, monitor)
+			}
 		}
+
+		//time.Sleep(15 * time.Second)
+
+		web.StartHttpServer()
 	}
-
-	//time.Sleep(15 * time.Second)
-
-	web.StartHttpServer()
-
 }
