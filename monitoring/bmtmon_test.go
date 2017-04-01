@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 )
 
-func TestFoo(t *testing.T) {
+func TestMonitorMarshalling(t *testing.T) {
 	var foo BmtMon
 	foo.bmt_name = "abc"
 	foo.Bmt_data = "{{'size':0','aggs':{'authors':{'terms':{'field':'author.keyword'}}}}}"

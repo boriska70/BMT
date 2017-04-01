@@ -33,7 +33,7 @@ func main() {
 
 	client.ClientOut = client.CreateClient(config.OES)
 
-	if client.ClientOut != nil {
+	if client.ClientOut == nil {
 		os.Exit(-13)
 	}
 	stateOut := client.ClientOut.ClusterState();
