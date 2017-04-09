@@ -18,25 +18,27 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - "10200:9200"
+      - "10300:9300"
     command: [elasticsearch, -Enetwork.host=0.0.0.0, -Enetwork.bind_host=0.0.0.0, -Ecluster.name=elasticlaster]
   kibana:
     image: kibana:5.1.1
     links:
       - elastic:elasticsearch
     ports:
-      - "5601:5601"
+      - "6601:5601"
     depends_on:
       - elastic
   bmt:
     image: boriska70/bmt
     working_dir: /usr/bin
+    volumes:
+      - .:/usr/share
     links:
       - elastic:elasticsearch
     depends_on:
       - elastic
-    command: "/usr/bin/bmt -ies=http://elasticsearch:9200 -oes=http://elasticsearch:9200"
+    command: "/usr/bin/bmt -ies=http://elasticsearch:9200 -oes=http://elasticsearch:9200 -queries=/usr/share/queries.yml"
 volumes:
   esdata:
     driver: local
