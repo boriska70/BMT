@@ -35,28 +35,36 @@ func FetchData(ch chan BmtMon, monitor util.Monitor) {
 				log.Errorln("Error while parshing response: " + res)
 			} else {
 				hits := parsed["hits"]
-				hitsMap, _ := hits.(map[string]interface{})
-				if len(hitsMap["hits"].([]interface{})) > 0 {
-					var hitsBytes []byte
-					hitsMap["ts"]=time.Now().UTC().Round(time.Second)
-					hitsBytes,_ = json.Marshal(hitsMap)
-					//log.Println("Sending hits: " + string(hitsBytes))
-					var data BmtMon
-					data.bmt_name = monitor.Name+"_hits"
-					data.Bmt_data = string(hitsBytes)
-					ch <- data
+				if hits != nil {
+					hitsMap, _ := hits.(map[string]interface{})
+					if len(hitsMap["hits"].([]interface{})) > 0 {
+						var hitsBytes []byte
+						hitsMap["ts"] = time.Now().UTC().Round(time.Second)
+						hitsBytes, _ = json.Marshal(hitsMap)
+						//log.Println("Sending hits: " + string(hitsBytes))
+						var data BmtMon
+						data.bmt_name = monitor.Name + "_hits"
+						data.Bmt_data = string(hitsBytes)
+						ch <- data
+					}
+				} else {
+					log.Debug("No hits in the response: %s", res)
 				}
 				aggs := parsed["aggregations"]
-				aggsMap,_ := aggs.(map[string]interface{})
-				if len(aggsMap) > 0 {
-					var aggsBytes []byte
-					aggsMap["ts"]=time.Now().UTC().Round(time.Second)
-					aggsBytes,_ = json.Marshal(aggsMap)
-					//log.Println("Sending aggregations: " + string(aggsBytes))
-					var data BmtMon
-					data.bmt_name = monitor.Name+"_aggregations"
-					data.Bmt_data = string(aggsBytes)
-					ch <- data
+				if aggs != nil {
+					aggsMap, _ := aggs.(map[string]interface{})
+					if len(aggsMap) > 0 {
+						var aggsBytes []byte
+						aggsMap["ts"] = time.Now().UTC().Round(time.Second)
+						aggsBytes, _ = json.Marshal(aggsMap)
+						//log.Println("Sending aggregations: " + string(aggsBytes))
+						var data BmtMon
+						data.bmt_name = monitor.Name + "_aggregations"
+						data.Bmt_data = string(aggsBytes)
+						ch <- data
+					}
+				} else {
+					log.Debug("No aggregations in the response: %s", res)
 				}
 
 			}
