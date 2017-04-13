@@ -18,7 +18,11 @@ func CreateClient(url string) (*elastic.Client) {
 		log.Infof("Creating Elasticsearch client for %v", url)
 		client, err := elastic.NewClient(elastic.SetURL(url))
 		if err != nil {
+			if(elastic.IsTimeout(err)){
+				log.Errorf("Timeout happened while connecting to Elasticsearch on %s", url)
+			}
 			log.Errorf("Failed to create Elasticsearch client for %s", url)
+			log.Errorf("Error message is: %s", err)
 			i++
 			time.Sleep(CONNECTION_TIMEOUT * time.Second)
 		} else {

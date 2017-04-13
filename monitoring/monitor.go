@@ -36,10 +36,23 @@ func FetchData(ch chan BmtMon, monitor util.Monitor) {
 			} else {
 				hits := parsed["hits"]
 				if hits != nil {
+					f := hits.(map[string]interface{})["total"].(float64)
+					totalMap := make(map[string]interface{})
+					totalMap["ts"] = time.Now().UTC().Round(time.Second)
+					totalMap["total_count"] = f
+					totalMap["metric_name"] = monitor.Name
+					var totalBytes []byte;
+					totalBytes,_ = json.Marshal(totalMap)
+					var data BmtMon
+					data.bmt_name = monitor.Name + "_total"
+					data.Bmt_data = string(totalBytes)
+					ch <- data
+
 					hitsMap, _ := hits.(map[string]interface{})
 					if len(hitsMap["hits"].([]interface{})) > 0 {
 						var hitsBytes []byte
 						hitsMap["ts"] = time.Now().UTC().Round(time.Second)
+						hitsMap["metric_name"] = monitor.Name
 						hitsBytes, _ = json.Marshal(hitsMap)
 						//log.Println("Sending hits: " + string(hitsBytes))
 						var data BmtMon
@@ -48,7 +61,7 @@ func FetchData(ch chan BmtMon, monitor util.Monitor) {
 						ch <- data
 					}
 				} else {
-					log.Debug("No hits in the response: %s", res)
+					log.Warn("No hits in the response: %s", res)
 				}
 				aggs := parsed["aggregations"]
 				if aggs != nil {
@@ -56,6 +69,7 @@ func FetchData(ch chan BmtMon, monitor util.Monitor) {
 					if len(aggsMap) > 0 {
 						var aggsBytes []byte
 						aggsMap["ts"] = time.Now().UTC().Round(time.Second)
+						aggsMap["metric_name"] = monitor.Name
 						aggsBytes, _ = json.Marshal(aggsMap)
 						//log.Println("Sending aggregations: " + string(aggsBytes))
 						var data BmtMon
@@ -64,7 +78,7 @@ func FetchData(ch chan BmtMon, monitor util.Monitor) {
 						ch <- data
 					}
 				} else {
-					log.Debug("No aggregations in the response: %s", res)
+					log.Warn("No aggregations in the response: %s", res)
 				}
 
 			}
@@ -89,7 +103,14 @@ func fetchDataOverHttp(monitor util.Monitor, url string) string {
 	if errResp != nil {
 		log.Error("Error occurred when fetching data for monitor %s. Error message: %s", monitor.Name, errResp.Error())
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if resp != nil && resp.Body != nil {
+			resp.Body.Close()
+		}
+	}()
+
+
+
 
 	log.Infof("Status for fetching data for monitor %s is %d", monitor.Name, resp.StatusCode)
 	log.Infof("Response headers are %v", resp.Header)
