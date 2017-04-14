@@ -111,12 +111,16 @@ func fetchDataOverHttp(monitor util.Monitor, url string) string {
 
 
 
+	if resp != nil {
+		log.Infof("Status for fetching data for monitor %s is %d", monitor.Name, resp.StatusCode)
+		log.Infof("Response headers are %v", resp.Header)
+		body, _ := ioutil.ReadAll(resp.Body)
 
-	log.Infof("Status for fetching data for monitor %s is %d", monitor.Name, resp.StatusCode)
-	log.Infof("Response headers are %v", resp.Header)
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	return string(body)
+		return string(body)
+	} else {
+		log.Error("No response received for monitor %s", monitor.Name)
+		return string("{}")
+	}
 }
 
 func SendData(ch chan BmtMon) {
